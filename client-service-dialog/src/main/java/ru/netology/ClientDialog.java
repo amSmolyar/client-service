@@ -15,7 +15,7 @@ public class ClientDialog {
     public static void main(String[] args) {
         try {
             try {
-                clientSocket = new Socket("localhost", 58003);
+                clientSocket = new Socket("netology.homework", 58003);
                 inBuf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 outBuf = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
