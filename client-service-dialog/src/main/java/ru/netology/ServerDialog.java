@@ -6,16 +6,14 @@ import java.net.Socket;
 import java.text.ParseException;
 
 public class ServerDialog {
-    private static ServerSocket server;
-    private static Socket clientSocket;
     private static BufferedReader inBuf;
     private static BufferedWriter outBuf;
     private static User newUser;
 
     public static void main(String[] args) {
-        try {
-            server = new ServerSocket(58003);
-            clientSocket = server.accept();
+        try (ServerSocket server = new ServerSocket(58003);
+             Socket clientSocket = server.accept()) {
+
             newUser = new User();
             try {
                 inBuf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -33,10 +31,7 @@ public class ServerDialog {
                     outBuf.write("You are registered successfully, \n" + newUser.toString());
                     outBuf.flush();
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
             } finally {
-                clientSocket.close();
                 inBuf.close();
                 outBuf.close();
             }

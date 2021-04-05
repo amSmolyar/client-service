@@ -7,20 +7,16 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientDialog {
-    private static Socket clientSocket;
-    private static BufferedWriter outBuf;
     private static BufferedReader inBuf;
     private static Scanner scan;
 
     public static void main(String[] args) {
-        try {
+        try (Socket clientSocket = new Socket("netology.homework", 58003);
+             BufferedWriter outBuf = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+
+            scan = new Scanner(System.in);
             try {
-                clientSocket = new Socket("netology.homework", 58003);
                 inBuf = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                outBuf = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-                scan = new Scanner(System.in);
-
                 while (!readServerMessage()) {
                     readAll();
                     String userData = scan.nextLine();
@@ -29,13 +25,12 @@ public class ClientDialog {
                 }
                 readAll();
             } finally {
-                clientSocket.close();
                 inBuf.close();
-                outBuf.close();
-                scan.close();
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        } finally {
+            scan.close();
         }
     }
 
